@@ -1,0 +1,67 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:CompileBindings="false"
+        x:Class="DemoTest.CatalogWindow"
+        Title="Каталог">
+    <DockPanel>
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="5">
+			<TextBox Watermark="Поиск" Width="200" Margin="5" Name="SearchBox" KeyUp="SearchBox_KeyUp"></TextBox>
+            <ComboBox Margin="5" Width="200" Name="Sort" SelectionChanged="Sort_SelectionChanged">
+				<ComboBoxItem>по возрастанию</ComboBoxItem>
+				<ComboBoxItem>по убыванию</ComboBoxItem>
+            </ComboBox>
+            <ComboBox Margin="5" Width="200" Name="Filter" SelectionChanged="Filter_SelectionChanged"></ComboBox>
+        </StackPanel>
+
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Назад" Margin="5" Click="Back_Click"></Button>
+            <Button Content="Создать товар" Margin="5" Click="Add_Click" IsVisible="False" Name="AddButton"></Button>
+        </StackPanel>
+
+        <ListBox Name="TovarsBox"  SelectionChanged="TovarsBox_SelectionChanged">
+            <ListBox.ItemsPanel>
+				<ItemsPanelTemplate>
+					<UniformGrid Columns="1"></UniformGrid>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+				<DataTemplate>
+					<Border BorderBrush="Black" BorderThickness="1">
+						<DockPanel>
+                            <Border BorderBrush="Black" BorderThickness="1" Margin="5" DockPanel.Dock="Left">
+                                <StackPanel  Orientation="Vertical" VerticalAlignment="Center">
+								    <Image Height="80" Width="80 " Margin="5" Source="{Binding GetPhoto}"></Image>
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="Black" BorderThickness="1" Margin="5" DockPanel.Dock="Right">
+								<StackPanel  Orientation="Vertical" VerticalAlignment="Center">
+									<TextBlock Text="{Binding DiscountNow}"></TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="Black" BorderThickness="1" Margin="5">
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
+									<TextBlock Text="{Binding Description,StringFormat='Описание продукта:{0}'}" Margin="5"/>
+									<TextBlock Text="{Binding Category.CategoryName,StringFormat='Категория продукта:{0}'}" Margin="5"/>
+									<TextBlock Text="{Binding TovarType.TovarTypeName,StringFormat='Наименование продукта:{0}'}" Margin="5"/>
+									<TextBlock Text="{Binding Provider.ProviderName,StringFormat='Поставщик:{0}'}" Margin="5"/>
+									<TextBlock Text="{Binding Manufacturer.Manufacturername,StringFormat='Производитель продукта:{0}'}" Margin="5"/>
+									<TextBlock Text="{Binding Price,StringFormat='Цена продукта:{0}'}" Margin="5"/>
+									<TextBlock Text="{Binding Quantity,StringFormat='Количество продукта:{0}'}" Margin="5"/>
+									
+                                </StackPanel>
+                            </Border>
+                        </DockPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+    </DockPanel>
+
+</Window>
