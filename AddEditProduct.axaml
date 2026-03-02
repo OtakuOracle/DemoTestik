@@ -12,11 +12,11 @@
 		<TextBox Margin="5" Watermark="Введите Цену" Width="200" Text="{Binding Price}"></TextBox>
 		<TextBox Margin="5" Watermark="Введите Скидку" Width="200" Text="{Binding DiscountNow}"></TextBox>
 		<TextBox Margin="5" Watermark="Введите Количество" Width="200" Text="{Binding Quantity}"></TextBox>
-		<TextBox Margin="5" Watermark="Введите Единицу измерения" Text="{Binding Unit}" Width="200"></TextBox>
         <ComboBox Name="Manufacturer" Width="200" Margin="5" > </ComboBox>
         <ComboBox Name="Provider" Width="200" Margin="5"> </ComboBox>
         <ComboBox Name="Category" Width="200" Margin="5" > </ComboBox>
-        <Image Source="{Binding Photo}" Height="100" Width="100" Margin="5" Name="ImageBox"></Image>
+		<ComboBox Name="Unit" Width="200" Margin="5" > </ComboBox>
+		<Image Source="{Binding Photo}" Height="100" Width="100" Margin="5" Name="ImageBox"></Image>
         <Button Content="Назад" Margin="5" Click="Back_Click"></Button>
         <Button Content="Создать" Margin="5" Click="Add_Click"></Button>
         <Button Content="Добавить картинку" Margin="5" Click="AddImage_Click"></Button>
