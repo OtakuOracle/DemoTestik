@@ -32,17 +32,58 @@ public partial class CatalogWindow : Window
 
     private void CheckRole()
     {
-        using var context = new TrenirovkaContext();
-
-        var curUser = context.Users.Where(x => x.UserId == _currentUserId).FirstOrDefault();
-        if (curUser.RoleId == 2 || curUser.RoleId == 3)
-
+        // 1. Сначала проверяем, не зашел ли пользователь как Гость (ID = 0)
+        if (_currentUserId == 0)
         {
-            AddButton.IsVisible = true;
+            AddButton.IsVisible = false;
+            Filter.IsVisible = false;
+            Sort.IsVisible = false;
+            SearchBox.IsVisible = false;
+            return; // Выходим из метода, так как гостя нет в базе данных
+        }
+
+        using var context = new TrenirovkaContext();
+        var curUser = context.Users.FirstOrDefault(x => x.UserId == _currentUserId);
+
+        if (curUser != null)
+        {
+            // только для Администратора - Роль 1 он может добавить удалить и редактировать товар
+            if (curUser.RoleId == 1)
+            {
+                AddButton.IsVisible = true;
+            }
+            else
+            {
+                AddButton.IsVisible = false;
+            }
+
+            // Управление поиском, фильтрацией и сортировкой
+            if (curUser.RoleId == 1 || curUser.RoleId == 2)
+            {
+                // Админ (1) и Пользователь (2) могут пользоваться инструментами
+                Filter.IsVisible = true;
+                Sort.IsVisible = true;
+                SearchBox.IsVisible = true;
+            }
+            else if (curUser.RoleId == 3)
+            {
+                // Роль 3 (Просмотр) — скрываем инструменты
+                Filter.IsVisible = false;
+                Sort.IsVisible = false;
+                SearchBox.IsVisible = false;
+            }
+            else
+            {
+                // Для любых других ролей на всякий случай тоже скрываем
+                Filter.IsVisible = false;
+                Sort.IsVisible = false;
+                SearchBox.IsVisible = false;
+            }
         }
     }
 
-    private void LoadBox()
+
+    private void LoadBox() //для комбобокса
     {
         using var context = new TrenirovkaContext();
 
@@ -139,9 +180,15 @@ public partial class CatalogWindow : Window
         Get(); // Обновляем каталог при изменении фильтра
 
     }
-
     private void TovarsBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        // Если роль НЕ 1 (не админ), просто выходим из метода
+        if (_currentUserId != 1)
+        {
+            return;
+        }
+
+        // Если админ — переходим к редактированию
         if (TovarsBox.SelectedItem is Tovar tovar)
         {
             var addedit = new AddEditProduct(_currentUserId, tovar);
@@ -149,4 +196,5 @@ public partial class CatalogWindow : Window
             this.Close();
         }
     }
+
 }

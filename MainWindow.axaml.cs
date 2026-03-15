@@ -19,7 +19,7 @@ public partial class MainWindow : Window
 
     private void Guest_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        var catalog = new CatalogWindow();
+        var catalog = new CatalogWindow(0);
         catalog.Show();
         this.Close();
     }

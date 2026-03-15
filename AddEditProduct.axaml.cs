@@ -30,6 +30,7 @@ public partial class AddEditProduct : Window
         LoadPro();
         LoadCat();
         LoadUnit(); // Добавим вызов для загрузки единиц измерения
+        LoadTovarType();
         DataContext = new Tovar();
     }
 
@@ -43,15 +44,18 @@ public partial class AddEditProduct : Window
         LoadPro();
         LoadCat();
         LoadUnit(); // Добавим вызов для загрузки единиц измерения
+        LoadTovarType();
         DataContext = _tovar;
         EditBut.IsVisible = true;
         DeleteBut.IsVisible = true;
-        ImageBox.Source = new Bitmap(_tovar.Photo);
+        ImageBox.Source = _tovar.GetPhoto;
         var a = _tovar.ManufacturerId;
         var b = _tovar.CategoryId;
         var c = _tovar.ProviderId;
         var d = _tovar.Unit; // Получаем UnitId
+        var e = _tovar.TovarTypeId; //из таблицы товаров все 
 
+        TovarType.SelectedItem = context.TovarTypes.Where(x => x.TovarTypeId == e).Select(x => x.TovarTypeName).FirstOrDefault();
         Provider.SelectedItem = context.Providers.Where(x => x.ProviderId == c).Select(x => x.ProviderName).FirstOrDefault();
         Manufacturer.SelectedItem = context.Manufacturers.Where(x => x.ManufacturerId == a).Select(x => x.ManufacturerName).FirstOrDefault();
         Category.SelectedItem = context.Categories.Where(x => x.CategoryId == b).Select(x => x.CategoryName).FirstOrDefault();
@@ -72,23 +76,26 @@ public partial class AddEditProduct : Window
             using var context = new TrenirovkaContext();
             var newTovar = DataContext as Tovar;
 
-            if (Manufacturer.SelectedItem != null && Provider.SelectedItem != null && Category.SelectedItem != null && Unit.SelectedItem != null) // Добавим проверку Unit.SelectedItem
+            if (Manufacturer.SelectedItem != null && Provider.SelectedItem != null && Category.SelectedItem != null && Unit.SelectedItem != null && TovarType.SelectedItem != null) // Добавим проверку Unit.SelectedItem
             {
                 var man = Manufacturer.SelectedItem.ToString();
                 var pro = Provider.SelectedItem.ToString();
                 var cat = Category.SelectedItem.ToString();
                 var unit = Unit.SelectedItem.ToString(); // Получаем выбранную единицу измерения
+                var tovartype = TovarType.SelectedItem.ToString();
 
                 var manFin = context.Manufacturers.Where(x => x.ManufacturerName == man).Select(x => x.ManufacturerId).FirstOrDefault();
                 var proFin = context.Providers.Where(x => x.ProviderName == pro).Select(x => x.ProviderId).FirstOrDefault();
                 var catFin = context.Categories.Where(x => x.CategoryName == cat).Select(x => x.CategoryId).FirstOrDefault();
                 var unitFin = context.Units.Where(x => x.UnitName == unit).Select(x => x.UnitId).FirstOrDefault(); // Находим UnitId по UnitName
+                var tovartypeFin = context.TovarTypes.Where(x => x.TovarTypeName == tovartype).Select(x => x.TovarTypeId).FirstOrDefault(); 
 
                 newTovar.ProviderId = proFin;
                 newTovar.ManufacturerId = manFin;
                 newTovar.CategoryId = catFin;
                 newTovar.Unit = unitFin; // Присваиваем UnitId
                 newTovar.Photo = ImageName;
+                newTovar.TovarTypeId = tovartypeFin;
 
                 context.Tovars.Add(newTovar);
                 await context.SaveChangesAsync();
@@ -138,9 +145,18 @@ public partial class AddEditProduct : Window
     private void LoadUnit()
     {
         using var context = new TrenirovkaContext();
-        var units = context.Units.Select(x => x.UnitName).ToList();
-        Unit.ItemsSource = units; // Привязываем список к ComboBox
+        var unit = context.Units.Select(x => x.UnitName).ToList();
+        Unit.ItemsSource = unit; // Привязываем список к ComboBox
     }
+
+
+    private void LoadTovarType()
+    {
+        using var context = new TrenirovkaContext();
+        var tovartype = context.TovarTypes.Select(x => x.TovarTypeName).ToList();
+        TovarType.ItemsSource = tovartype; // Привязываем список к ComboBox
+    }
+
 
     private async void AddImage_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
@@ -196,17 +212,21 @@ public partial class AddEditProduct : Window
             var pro = Provider.SelectedItem.ToString();
             var cat = Category.SelectedItem.ToString();
             var unit = Unit.SelectedItem.ToString(); // Получаем выбранную единицу измерения
+            var tovartype = TovarType.SelectedItem.ToString();
 
             var manFin = context.Manufacturers.Where(x => x.ManufacturerName == man).Select(x => x.ManufacturerId).FirstOrDefault();
             var supFin = context.Providers.Where(x => x.ProviderName == pro).Select(x => x.ProviderId).FirstOrDefault();
             var catFin = context.Categories.Where(x => x.CategoryName == cat).Select(x => x.CategoryId).FirstOrDefault();
             var unitFin = context.Units.Where(x => x.UnitName == unit).Select(x => x.UnitId).FirstOrDefault(); // Находим UnitId по UnitName
+            var tovartypeFin = context.TovarTypes.Where(x => x.TovarTypeName == tovartype).Select(x => x.TovarTypeId).FirstOrDefault();
+
 
             _tovar.ProviderId = supFin;
             _tovar.ManufacturerId = manFin;
             _tovar.CategoryId = catFin;
             _tovar.Unit = unitFin; // Присваиваем UnitId
             _tovar.Photo = ImageName;
+            _tovar.TovarTypeId = tovartypeFin;
 
             context.Tovars.Update(_tovar);
             await context.SaveChangesAsync();
@@ -226,8 +246,5 @@ public partial class AddEditProduct : Window
             error.ShowAsync();
         }
 
-        // Этот код был дублирован и после try-catch, можно его удалить или перенести
-        // var tovar = DataContext as Tovar;
-        // context.SaveChanges();
     }
 }
