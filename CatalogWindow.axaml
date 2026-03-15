@@ -5,7 +5,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:CompileBindings="false"
         x:Class="DemoTest.CatalogWindow"
-        Title="Каталог">
+        Title="Каталог"
+		Icon="Icon/icon.png">
+	
     <DockPanel>
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Top" Margin="5">
 			<TextBox Watermark="Поиск" Width="200" Margin="5" Name="SearchBox" KeyUp="SearchBox_KeyUp"></TextBox>

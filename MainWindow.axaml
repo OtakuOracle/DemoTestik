@@ -4,7 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="DemoTest.MainWindow"
-        Title="Окно авторизации">
+        Title="Окно авторизации"
+		Icon="Icon/icon.png">
 	
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
 		<TextBox Margin="5" Name="LoginBox" Width="200" Watermark="Введите логин"></TextBox>

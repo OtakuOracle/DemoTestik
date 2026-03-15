@@ -5,7 +5,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="1200"
         x:CompileBindings="false"
         x:Class="DemoTest.AddEditProduct"
-        Title="Добавление и редактирование товара">
+        Title="Добавление и редактирование товара"
+	    Icon="Icon/icon.png">
+
 	<StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
 		<!-- Текстовые поля с подсказками -->
 		<TextBox Margin="5" Watermark="Введите Описание" Width="200" Text="{Binding Description}"></TextBox>
