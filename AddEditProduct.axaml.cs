@@ -16,7 +16,7 @@ public partial class AddEditProduct : Window
 {
     private Tovar _tovar;
     private int _currentUser;
-    private string ImageName = Guid.NewGuid().ToString("N");
+    private string ImageName;
 
     public AddEditProduct()
     {
@@ -94,7 +94,7 @@ public partial class AddEditProduct : Window
                 newTovar.ManufacturerId = manFin;
                 newTovar.CategoryId = catFin;
                 newTovar.Unit = unitFin; // Присваиваем UnitId
-                newTovar.Photo = ImageName;
+                newTovar.Photo = "images/" + ImageName;
                 newTovar.TovarTypeId = tovartypeFin;
 
                 context.Tovars.Add(newTovar);
@@ -174,9 +174,10 @@ public partial class AddEditProduct : Window
         if (file != null)
         {
             ImageBox.Source = new Bitmap(file.Path.LocalPath);
-            var targetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ImageName + Path.GetExtension(file.Name));
+            ImageName = Guid.NewGuid().ToString() + ".png";
+            var targetPath = AppDomain.CurrentDomain.BaseDirectory + "/images/" + ImageName;
             File.Copy(file.Path.LocalPath, targetPath);
-            ImageName = targetPath;
+
         }
     }
 
@@ -225,7 +226,7 @@ public partial class AddEditProduct : Window
             _tovar.ManufacturerId = manFin;
             _tovar.CategoryId = catFin;
             _tovar.Unit = unitFin; // Присваиваем UnitId
-            _tovar.Photo = ImageName;
+            _tovar.Photo = "images/" + ImageName;
             _tovar.TovarTypeId = tovartypeFin;
 
             context.Tovars.Update(_tovar);
