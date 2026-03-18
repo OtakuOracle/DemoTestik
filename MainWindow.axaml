@@ -10,8 +10,8 @@
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
 		<TextBox Margin="5" Name="LoginBox" Width="200" Watermark="Введите логин"></TextBox>
 		<TextBox Margin="5" Name="passwordBox" Width="200" Watermark="Введите пароль"></TextBox>
-        <Button Content="Выйти" Margin="5"  Click="Exit_Click"></Button>
-        <Button Content="Войти как гость" Margin="5" Click="Guest_Click"></Button>
-        <Button Content="Авторизироваться" Margin="5" Click="Auth_Click"></Button>
+        <Button Content="Выйти" FontFamily="Times New Roman" Margin="5"  Click="Exit_Click"></Button>
+        <Button Content="Войти как гость" FontFamily="Times New Roman" Margin="5" Click="Guest_Click"></Button>
+        <Button Content="Авторизироваться" FontFamily="Times New Roman" Margin="5" Click="Auth_Click"></Button>
     </StackPanel>
 </Window>
