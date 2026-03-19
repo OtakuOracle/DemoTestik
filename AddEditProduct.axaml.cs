@@ -1,14 +1,15 @@
-﻿using Avalonia;
+﻿using System;
+using System.Collections.Generic; 
+using System.IO;
+using System.Linq;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
-using MsBox.Avalonia;
-using System;
-using System.IO;
-using System.Linq;
 using DemoTest.Models;
-using System.Collections.Generic; // Добавим для List<string>
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 namespace DemoTest;
 
@@ -62,11 +63,43 @@ public partial class AddEditProduct : Window
         Unit.SelectedItem = context.Units.Where(x => x.UnitId == d).Select(x => x.UnitName).FirstOrDefault(); // Устанавливаем выбранную единицу измерения
     }
 
+
+
     private void Back_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
         var catalog = new CatalogWindow(_currentUser);
         catalog.Show();
         this.Close();
+    }
+
+
+    private bool ValidateProduct(Tovar t)
+    {
+        // Price: не может быть отрицательным 
+        if (t.Price.HasValue && t.Price < 0)
+        {
+            var errorPrice = MessageBoxManager.GetMessageBoxStandard(
+                "Ошибка",
+                "цена не должна быть отрицательной",
+                MsBox.Avalonia.Enums.ButtonEnum.Ok,
+                MsBox.Avalonia.Enums.Icon.Error);
+            errorPrice.ShowAsync();
+            return false;
+        }
+
+        // Quantity: не может быть отрицательным 
+        if (t.Quantity.HasValue && t.Quantity < 0)
+        {
+            var errorQty = MessageBoxManager.GetMessageBoxStandard(
+                "Ошибка",
+                "количество не должно быть отрицательным",
+                MsBox.Avalonia.Enums.ButtonEnum.Ok,
+                MsBox.Avalonia.Enums.Icon.Error);
+            errorQty.ShowAsync();
+            return false;
+        }
+
+        return true;
     }
 
     private async void Add_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -76,24 +109,29 @@ public partial class AddEditProduct : Window
             using var context = new TrenirovkaContext();
             var newTovar = DataContext as Tovar;
 
-            if (Manufacturer.SelectedItem != null && Provider.SelectedItem != null && Category.SelectedItem != null && Unit.SelectedItem != null && TovarType.SelectedItem != null) // Добавим проверку Unit.SelectedItem
+            if (!ValidateProduct(newTovar))
+            {
+                return;
+            }
+
+            if (Manufacturer.SelectedItem != null && Provider.SelectedItem != null && Category.SelectedItem != null && Unit.SelectedItem != null && TovarType.SelectedItem != null)
             {
                 var man = Manufacturer.SelectedItem.ToString();
                 var pro = Provider.SelectedItem.ToString();
                 var cat = Category.SelectedItem.ToString();
-                var unit = Unit.SelectedItem.ToString(); // Получаем выбранную единицу измерения
+                var unit = Unit.SelectedItem.ToString();
                 var tovartype = TovarType.SelectedItem.ToString();
 
                 var manFin = context.Manufacturers.Where(x => x.ManufacturerName == man).Select(x => x.ManufacturerId).FirstOrDefault();
                 var proFin = context.Providers.Where(x => x.ProviderName == pro).Select(x => x.ProviderId).FirstOrDefault();
                 var catFin = context.Categories.Where(x => x.CategoryName == cat).Select(x => x.CategoryId).FirstOrDefault();
-                var unitFin = context.Units.Where(x => x.UnitName == unit).Select(x => x.UnitId).FirstOrDefault(); // Находим UnitId по UnitName
-                var tovartypeFin = context.TovarTypes.Where(x => x.TovarTypeName == tovartype).Select(x => x.TovarTypeId).FirstOrDefault(); 
+                var unitFin = context.Units.Where(x => x.UnitName == unit).Select(x => x.UnitId).FirstOrDefault();
+                var tovartypeFin = context.TovarTypes.Where(x => x.TovarTypeName == tovartype).Select(x => x.TovarTypeId).FirstOrDefault();
 
                 newTovar.ProviderId = proFin;
                 newTovar.ManufacturerId = manFin;
                 newTovar.CategoryId = catFin;
-                newTovar.Unit = unitFin; // Присваиваем UnitId
+                newTovar.Unit = unitFin;
                 newTovar.Photo = "images/" + ImageName;
                 newTovar.TovarTypeId = tovartypeFin;
 
@@ -109,7 +147,6 @@ public partial class AddEditProduct : Window
             }
             else
             {
-                // Добавим сообщение об ошибке, если какие-то поля не заполнены
                 var error = MessageBoxManager.GetMessageBoxStandard("Ошибка", "Пожалуйста, заполните все поля, включая единицу измерения.", MsBox.Avalonia.Enums.ButtonEnum.Ok, MsBox.Avalonia.Enums.Icon.Error);
                 await error.ShowAsync();
             }
@@ -141,12 +178,11 @@ public partial class AddEditProduct : Window
         Category.ItemsSource = cat;
     }
 
-    // Новый метод для загрузки единиц измерения
     private void LoadUnit()
     {
         using var context = new TrenirovkaContext();
         var unit = context.Units.Select(x => x.UnitName).ToList();
-        Unit.ItemsSource = unit; // Привязываем список к ComboBox
+        Unit.ItemsSource = unit; 
     }
 
 
@@ -154,7 +190,7 @@ public partial class AddEditProduct : Window
     {
         using var context = new TrenirovkaContext();
         var tovartype = context.TovarTypes.Select(x => x.TovarTypeName).ToList();
-        TovarType.ItemsSource = tovartype; // Привязываем список к ComboBox
+        TovarType.ItemsSource = tovartype; 
     }
 
 
@@ -212,22 +248,26 @@ public partial class AddEditProduct : Window
             var man = Manufacturer.SelectedItem.ToString();
             var pro = Provider.SelectedItem.ToString();
             var cat = Category.SelectedItem.ToString();
-            var unit = Unit.SelectedItem.ToString(); // Получаем выбранную единицу измерения
+            var unit = Unit.SelectedItem.ToString();
             var tovartype = TovarType.SelectedItem.ToString();
 
             var manFin = context.Manufacturers.Where(x => x.ManufacturerName == man).Select(x => x.ManufacturerId).FirstOrDefault();
             var supFin = context.Providers.Where(x => x.ProviderName == pro).Select(x => x.ProviderId).FirstOrDefault();
             var catFin = context.Categories.Where(x => x.CategoryName == cat).Select(x => x.CategoryId).FirstOrDefault();
-            var unitFin = context.Units.Where(x => x.UnitName == unit).Select(x => x.UnitId).FirstOrDefault(); // Находим UnitId по UnitName
+            var unitFin = context.Units.Where(x => x.UnitName == unit).Select(x => x.UnitId).FirstOrDefault();
             var tovartypeFin = context.TovarTypes.Where(x => x.TovarTypeName == tovartype).Select(x => x.TovarTypeId).FirstOrDefault();
-
 
             _tovar.ProviderId = supFin;
             _tovar.ManufacturerId = manFin;
             _tovar.CategoryId = catFin;
-            _tovar.Unit = unitFin; // Присваиваем UnitId
+            _tovar.Unit = unitFin;
             _tovar.Photo = "images/" + ImageName;
             _tovar.TovarTypeId = tovartypeFin;
+
+            if (!ValidateProduct(_tovar))
+            {
+                return;
+            }
 
             context.Tovars.Update(_tovar);
             await context.SaveChangesAsync();
