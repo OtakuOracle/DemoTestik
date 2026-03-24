@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		x:CompileBindings="false"
+        x:Class="DemoTest.AddEditOrder"
+        Title="AddEditOrder"
+		Icon="Icon/icon.png">
+
+	<StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+		<!-- Текстовые поля с подсказками -->
+		<TextBox Margin="5" Watermark="Введите артикул" Width="200" Text="{Binding Description}"></TextBox>
+		<TextBox Margin="5" Watermark="Введите артикул" Width="200" Text="{Binding Price}"></TextBox>
+		<TextBox Margin="5" Watermark="Введите адрес пункта" Width="200" Text="{Binding DiscountNow}"></TextBox>
+		<TextBox Margin="5" Watermark="Введите дату заказа" Width="200" Text="{Binding Quantity}"></TextBox>
+		<TextBox Margin="5" Watermark="Введите дату доставки" Width="200" Text="{Binding Quantity}"></TextBox>
+		<!-- Выпадающие списки с подсказками (PlaceholderText) -->
+		<ComboBox Name="TovarType" Width="200" Margin="5" PlaceholderText="Выберите статус" />
+		<Button Content="Назад" Margin="5" Click="Back_Click"></Button>
+		<Button Content="Добавить" Margin="5" Click="Add_Click"></Button>
+		<Button Content="Удалить" Margin="5" Click="Delete_Click" IsVisible="False" Name="DeleteBut"></Button>
+		<Button Content="Изменить" Margin="5" Click="Edit_Click" IsVisible="False" Name="EditBut"></Button>
+	</StackPanel>
+</Window>
+
+

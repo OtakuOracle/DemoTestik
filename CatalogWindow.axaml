@@ -22,6 +22,7 @@
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Content="Назад" Margin="5" Click="Back_Click"></Button>
             <Button Content="Создать товар" Margin="5" Click="Add_Click" IsVisible="False" Name="AddButton"></Button>
+		     <Button Content="Заказы" Margin="5" Click="Order_Click" IsVisible="False" Name="OrderButton"></Button>
         </StackPanel>
 
         <ListBox Name="TovarsBox"  SelectionChanged="TovarsBox_SelectionChanged">

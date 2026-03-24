@@ -51,10 +51,12 @@ public partial class CatalogWindow : Window
             if (curUser.RoleId == 1)
             {
                 AddButton.IsVisible = true;
+                OrderButton.IsVisible = true;
             }
             else
             {
                 AddButton.IsVisible = false;
+                OrderButton.IsVisible = false;
             }
 
             // Управление поиском, фильтрацией и сортировкой
@@ -157,6 +159,16 @@ public partial class CatalogWindow : Window
         addedit.Show();
         this.Close();
     }
+
+
+    private void Order_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var orderwindow = new OrderWindow();
+        orderwindow.Show();
+        this.Close();
+    }
+
+
 
     private void Back_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {

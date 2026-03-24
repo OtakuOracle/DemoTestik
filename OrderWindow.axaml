@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		x:CompileBindings="false"
+        x:Class="DemoTest.OrderWindow"
+        Title="Заказы"
+		Icon="Icon/icon.png">
+	
+	<DockPanel>
+		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+			<Button Content="Добавить заказ" Margin="5" Click="Add_Click" Name="AddButton"></Button>
+			<Button Content="Назад" Margin="5" Click="Back_Click"></Button>
+		</StackPanel>
+		<ListBox Name="OrdersBox" SelectionChanged="OrdersBox_SelectionChanged">
+			<ListBox.ItemsPanel>
+				<ItemsPanelTemplate>
+					<UniformGrid Columns="1"></UniformGrid>
+				</ItemsPanelTemplate>
+			</ListBox.ItemsPanel>
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Border BorderBrush="Black" BorderThickness="1">
+						<DockPanel>
+							<Border BorderBrush="Black" BorderThickness="1" Margin="5" DockPanel.Dock="Right">
+								<StackPanel  Orientation="Vertical" VerticalAlignment="Center">
+									<TextBlock Text="{Binding DateDeliv}"></TextBlock>
+								</StackPanel>
+							</Border>
+
+							<Border BorderBrush="Black" BorderThickness="1" Margin="5">
+								<StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
+									<ItemsControl ItemsSource="{Binding TovarInOrders}">
+										<ItemsControl.ItemTemplate>
+											<DataTemplate>
+												<TextBlock Text="{Binding Tovar.Art}" FontSize="10" Foreground="Gray"/>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+									<TextBlock Text="{Binding OrderStatus.OrderStatusName}" Margin="5"/>
+									<TextBlock Text="{Binding PickUpPoint.PickUpPointName}" Margin="5"/>
+									<TextBlock Text="{Binding DateOrder}" Margin="5"/>
+								</StackPanel>
+							</Border>
+						</DockPanel>
+					</Border>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+
+	</DockPanel>
+
+</Window>
+
